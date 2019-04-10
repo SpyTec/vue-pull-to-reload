@@ -1,6 +1,6 @@
 <template>
   <div class="vue-pull-to-reload-wrapper"
-       :style="{ height: wrapperHeight, position: 'absolute', marginTop: diff}">
+       :style="{ height: wrapperHeight, position: 'absolute', marginTop: `${diff}px`}">
     <div v-if="topLoadMethod"
          :style="{ height: `${topBlockHeight}px`, marginTop: `${-topBlockHeight}px` }"
          class="action-block">
