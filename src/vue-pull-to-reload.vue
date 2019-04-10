@@ -1,6 +1,6 @@
 <template>
-  <div class="vue-pull-to-wrapper"
-       :style="{ height: wrapperHeight, transform: `translate3d(0, ${diff}px, 0)` }">
+  <div class="vue-pull-to-reload-wrapper"
+       :style="{ height: wrapperHeight, position: 'absolute', marginTop: diff}">
     <div v-if="topLoadMethod"
          :style="{ height: `${topBlockHeight}px`, marginTop: `${-topBlockHeight}px` }"
          class="action-block">
@@ -34,7 +34,7 @@
   import { TOP_DEFAULT_CONFIG, BOTTOM_DEFAULT_CONFIG } from './config';
 
   export default {
-    name: 'vue-pull-to',
+    name: 'vue-pull-to-reload',
     props: {
       distanceIndex: {
         type: Number,
@@ -242,7 +242,7 @@
       },
 
       handleTouchEnd() {
-        if (this.diff === 0) return
+        if (this.diff === 0) return;
         if (this.state === 'trigger') {
           this.actionLoading();
           return;
@@ -299,7 +299,7 @@
 </script>
 
 <style scoped>
-  .vue-pull-to-wrapper {
+  .vue-pull-to-reload-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -312,7 +312,7 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  .vue-pull-to-wrapper .action-block {
+  .vue-pull-to-reload-wrapper .action-block {
     position: relative;
     width: 100%;
   }

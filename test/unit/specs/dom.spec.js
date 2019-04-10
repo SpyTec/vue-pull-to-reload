@@ -7,7 +7,7 @@ describe('dom', () => {
   it('create', () => {
     vm = createTest(PullTo, true);
     const elem = vm.$el;
-    expect(elem.classList.contains('vue-pull-to-wrapper')).to.be.ok;
+    expect(elem.classList.contains('vue-pull-to-reload-wrapper')).to.be.ok;
     expect(elem.querySelector('.scroll-container')).to.be.ok;
   });
 

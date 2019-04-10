@@ -1,4 +1,4 @@
-# Vue-Pull-To
+# Vue Pull to Reload
 一个集成了下拉刷新、上拉加载、无限滚动加载的Vue组件。
 
 [![Build Status](https://travis-ci.org/stackjie/vue-pull-to.svg?branch=master)](https://travis-ci.org/stackjie/vue-pull-to)

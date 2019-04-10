@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["VuePullTo"] = factory();
+		exports["VuePullToReload"] = factory();
 	else
-		root["VuePullTo"] = factory();
+		root["VuePullToReload"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -185,14 +185,30 @@ __webpack_require__(46)
 
 var Component = __webpack_require__(44)(
   /* script */
-  __webpack_require__(13),
+  __webpack_require__(10),
   /* template */
   __webpack_require__(45),
   /* scopeId */
-  "data-v-12abd9fb",
+  "data-v-d37c2ed4",
   /* cssModules */
   null
 )
+Component.options.__file = "/home/spytec/Documents/JavaScriptProjects/vue-pull-to/src/vue-pull-to-reload.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] vue-pull-to-reload.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d37c2ed4", Component.options)
+  } else {
+    hotAPI.reload("data-v-d37c2ed4", Component.options)
+  }
+})()}
 
 module.exports = Component.exports
 
@@ -207,109 +223,21 @@ module.exports = Component.exports
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var TOP_DEFAULT_CONFIG = {
-  pullText: '下拉刷新',
-  triggerText: '释放更新',
-  loadingText: '加载中...',
-  doneText: '加载完成',
-  failText: '加载失败',
-  loadedStayTime: 400,
-  stayDistance: 50,
-  triggerDistance: 70
-};
-
-var BOTTOM_DEFAULT_CONFIG = {
-  pullText: '上拉加载',
-  triggerText: '释放更新',
-  loadingText: '加载中...',
-  doneText: '加载完成',
-  failText: '加载失败',
-  loadedStayTime: 400,
-  stayDistance: 50,
-  triggerDistance: 70
-};
-
-exports.TOP_DEFAULT_CONFIG = TOP_DEFAULT_CONFIG;
-exports.BOTTOM_DEFAULT_CONFIG = BOTTOM_DEFAULT_CONFIG;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _vuePullTo = __webpack_require__(9);
-
-var _vuePullTo2 = _interopRequireDefault(_vuePullTo);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = _vuePullTo2.default;
-module.exports = exports['default'];
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.throttle = throttle;
-// http://www.alloyteam.com/2012/11/javascript-throttle/
-
-function throttle(fn, delay) {
-  var mustRunDelay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-  var timer = null;
-  var tStart = void 0;
-  return function () {
-    var context = this;
-    var args = arguments;
-    var tCurr = +new Date();
-    clearTimeout(timer);
-    if (!tStart) {
-      tStart = tCurr;
-    }
-    if (mustRunDelay !== 0 && tCurr - tStart >= mustRunDelay) {
-      fn.apply(context, args);
-      tStart = tCurr;
-    } else {
-      timer = setTimeout(function () {
-        fn.apply(context, args);
-      }, delay);
-    }
-  };
-}
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _assign = __webpack_require__(14);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _utils = __webpack_require__(12);
+var _utils = __webpack_require__(13);
 
-var _config = __webpack_require__(10);
+var _config = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -339,7 +267,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 
 exports.default = {
-  name: 'vue-pull-to',
+  name: 'vue-pull-to-reload',
   props: {
     distanceIndex: {
       type: Number,
@@ -401,7 +329,9 @@ exports.default = {
       scrollEl: null,
       startScrollTop: 0,
       startY: 0,
+      startX: 0,
       currentY: 0,
+      currentX: 0,
       distance: 0,
       direction: 0,
       diff: 0,
@@ -495,13 +425,18 @@ exports.default = {
     },
     handleTouchStart: function handleTouchStart(event) {
       this.startY = event.touches[0].clientY;
+      this.startX = event.touches[0].clientX;
       this.beforeDiff = this.diff;
       this.startScrollTop = this.scrollEl.scrollTop;
       this.bottomReached = this.checkBottomReached();
     },
     handleTouchMove: function handleTouchMove(event) {
       this.currentY = event.touches[0].clientY;
+      this.currentX = event.touches[0].clientX;
       this.distance = (this.currentY - this.startY) / this.distanceIndex + this.beforeDiff;
+      // judge pan gesture direction, if not vertival just return
+      // make sure that if some components embeded can handle horizontal pan gesture in here
+      if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) return;
       this.direction = this.distance > 0 ? 'down' : 'up';
 
       if (this.startScrollTop === 0 && this.direction === 'down' && this.isTopBounce) {
@@ -533,15 +468,13 @@ exports.default = {
       }
     },
     handleTouchEnd: function handleTouchEnd() {
-      if (this.diff !== 0) {
-        if (this.state === 'trigger') {
-          this.actionLoading();
-          return;
-        }
-
-        // pull cancel
-        this.scrollTo(0);
+      if (this.diff === 0) return;
+      if (this.state === 'trigger') {
+        this.actionLoading();
+        return;
       }
+      // pull cancel
+      this.scrollTo(0);
     },
     handleScroll: function handleScroll(event) {
       this.isThrottleScroll ? this.throttleEmitScroll(event) : this.$emit('scroll', event);
@@ -587,6 +520,98 @@ exports.default = {
   }
 };
 module.exports = exports['default'];
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var TOP_DEFAULT_CONFIG = {
+  pullText: '下拉刷新',
+  triggerText: '释放更新',
+  loadingText: '加载中...',
+  doneText: '加载完成',
+  failText: '加载失败',
+  loadedStayTime: 400,
+  stayDistance: 50,
+  triggerDistance: 70
+};
+
+var BOTTOM_DEFAULT_CONFIG = {
+  pullText: '上拉加载',
+  triggerText: '释放更新',
+  loadingText: '加载中...',
+  doneText: '加载完成',
+  failText: '加载失败',
+  loadedStayTime: 400,
+  stayDistance: 50,
+  triggerDistance: 70
+};
+
+exports.TOP_DEFAULT_CONFIG = TOP_DEFAULT_CONFIG;
+exports.BOTTOM_DEFAULT_CONFIG = BOTTOM_DEFAULT_CONFIG;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _vuePullToReload = __webpack_require__(9);
+
+var _vuePullToReload2 = _interopRequireDefault(_vuePullToReload);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _vuePullToReload2.default;
+module.exports = exports['default'];
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.throttle = throttle;
+// http://www.alloyteam.com/2012/11/javascript-throttle/
+
+function throttle(fn, delay) {
+  var mustRunDelay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+  var timer = null;
+  var tStart = void 0;
+  return function () {
+    var context = this;
+    var args = arguments;
+    var tCurr = +new Date();
+    clearTimeout(timer);
+    if (!tStart) {
+      tStart = tCurr;
+    }
+    if (mustRunDelay !== 0 && tCurr - tStart >= mustRunDelay) {
+      fn.apply(context, args);
+      tStart = tCurr;
+    } else {
+      timer = setTimeout(function () {
+        fn.apply(context, args);
+      }, delay);
+    }
+  };
+}
 
 /***/ }),
 /* 14 */
@@ -1041,97 +1066,102 @@ $export($export.S + $export.F, 'Object', { assign: __webpack_require__(27) });
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(43)(undefined);
-// imports
+exports = module.exports = __webpack_require__(43)(false);
+// Module
+exports.push([module.i, "\n.vue-pull-to-reload-wrapper[data-v-d37c2ed4] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n  -webkit-flex-direction: column;\n          flex-direction: column;\n  height: 100%;\n}\n.scroll-container[data-v-d37c2ed4] {\n  -webkit-box-flex: 1;\n  -webkit-flex: 1;\n          flex: 1;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n.vue-pull-to-reload-wrapper .action-block[data-v-d37c2ed4] {\n  position: relative;\n  width: 100%;\n}\n.default-text[data-v-d37c2ed4] {\n  height: 100%;\n  line-height: 50px;\n  text-align: center;\n}\n", ""]);
 
-
-// module
-exports.push([module.i, ".vue-pull-to-wrapper[data-v-12abd9fb]{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;height:100%}.scroll-container[data-v-12abd9fb]{-webkit-box-flex:1;-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.vue-pull-to-wrapper .action-block[data-v-12abd9fb]{position:relative;width:100%}.default-text[data-v-12abd9fb]{height:100%;line-height:50px;text-align:center}", ""]);
-
-// exports
 
 
 /***/ }),
 /* 43 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
 */
 // css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
+module.exports = function (useSourceMap) {
+  var list = []; // return the list of modules as css string
 
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
+  list.toString = function toString() {
+    return this.map(function (item) {
+      var content = cssWithMappingToString(item, useSourceMap);
 
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
+      if (item[2]) {
+        return '@media ' + item[2] + '{' + content + '}';
+      } else {
+        return content;
+      }
+    }).join('');
+  }; // import a list of modules into the list
+
+
+  list.i = function (modules, mediaQuery) {
+    if (typeof modules === 'string') {
+      modules = [[null, modules, '']];
+    }
+
+    var alreadyImportedModules = {};
+
+    for (var i = 0; i < this.length; i++) {
+      var id = this[i][0];
+
+      if (id != null) {
+        alreadyImportedModules[id] = true;
+      }
+    }
+
+    for (i = 0; i < modules.length; i++) {
+      var item = modules[i]; // skip already imported module
+      // this implementation is not 100% perfect for weird media query combinations
+      // when a module is imported multiple times with different media queries.
+      // I hope this will never occur (Hey this way we have smaller bundles)
+
+      if (item[0] == null || !alreadyImportedModules[item[0]]) {
+        if (mediaQuery && !item[2]) {
+          item[2] = mediaQuery;
+        } else if (mediaQuery) {
+          item[2] = '(' + item[2] + ') and (' + mediaQuery + ')';
+        }
+
+        list.push(item);
+      }
+    }
+  };
+
+  return list;
 };
 
 function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
+  var content = item[1] || '';
+  var cssMapping = item[3];
 
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
+  if (!cssMapping) {
+    return content;
+  }
 
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
+  if (useSourceMap && typeof btoa === 'function') {
+    var sourceMapping = toComment(cssMapping);
+    var sourceURLs = cssMapping.sources.map(function (source) {
+      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';
+    });
+    return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+  }
 
-	return [content].join('\n');
-}
+  return [content].join('\n');
+} // Adapted from convert-source-map (MIT)
 
-// Adapted from convert-source-map (MIT)
+
 function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
+  // eslint-disable-next-line no-undef
+  var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+  return '/*# ' + data + ' */';
 }
-
 
 /***/ }),
 /* 44 */
@@ -1192,14 +1222,15 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 /* 45 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "vue-pull-to-wrapper",
+    staticClass: "vue-pull-to-reload-wrapper",
     style: ({
       height: _vm.wrapperHeight,
-      transform: ("translate3d(0, " + _vm.diff + "px, 0)")
+      position: 'absolute',
+      marginTop: _vm.diff
     })
   }, [(_vm.topLoadMethod) ? _c('div', {
     staticClass: "action-block",
@@ -1211,7 +1242,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "default-text"
   }, [_vm._v(_vm._s(_vm.topText))])], {
     state: _vm.state,
-    stateText: _vm.topText
+    stateText: _vm.topText,
+    triggerDistance: _vm._topConfig.triggerDistance,
+    diff: _vm.diff
   })], 2) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "scroll-container"
   }, [_vm._t("default")], 2), _vm._v(" "), (_vm.bottomLoadMethod) ? _c('div', {
@@ -1224,9 +1257,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "default-text"
   }, [_vm._v(_vm._s(_vm.bottomText))])], {
     state: _vm.state,
-    stateText: _vm.bottomText
+    stateText: _vm.bottomText,
+    triggerDistance: _vm._bottomConfig.triggerDistance,
+    diff: _vm.diff
   })], 2) : _vm._e()])
 },staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-d37c2ed4", module.exports)
+  }
+}
 
 /***/ }),
 /* 46 */
@@ -1239,7 +1281,20 @@ var content = __webpack_require__(42);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(47)("0cd817f2", content, true);
+var update = __webpack_require__(47)("5c525727", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../node_modules/css-loader/dist/cjs.js?{\"sourceMap\":false}!../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-d37c2ed4\",\"scoped\":true,\"hasInlineConfig\":false}!../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./vue-pull-to-reload.vue", function() {
+     var newContent = require("!!../node_modules/css-loader/dist/cjs.js?{\"sourceMap\":false}!../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-d37c2ed4\",\"scoped\":true,\"hasInlineConfig\":false}!../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./vue-pull-to-reload.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 /* 47 */

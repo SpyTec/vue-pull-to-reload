@@ -3,7 +3,7 @@
 // we are also using it with karma-webpack
 //   https://github.com/webpack/karma-webpack
 
-var webpackConfig = require('../../build/base.config');
+var webpackConfig = require('../../build/webpack.base.conf');
 webpackConfig.devtool = '#inline-source-map';
 
 module.exports = function (config) {
@@ -30,5 +30,5 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     }
-  })
+  });
 };
