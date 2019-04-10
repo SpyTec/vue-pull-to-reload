@@ -1230,7 +1230,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     style: ({
       height: _vm.wrapperHeight,
       position: 'absolute',
-      marginTop: _vm.diff
+      marginTop: (_vm.diff + "px")
     })
   }, [(_vm.topLoadMethod) ? _c('div', {
     staticClass: "action-block",
