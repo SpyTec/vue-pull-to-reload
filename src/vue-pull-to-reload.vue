@@ -1,29 +1,29 @@
 <template>
-  <div class="vue-pull-to-reload-wrapper"
+  <div class="vpr-wrapper"
        :style="{ height: wrapperHeight, position: 'absolute', marginTop: `${diff}px`}">
     <div v-if="topLoadMethod"
          :style="{ height: `${topBlockHeight}px`, marginTop: `${-topBlockHeight}px` }"
-         class="action-block">
+         class="vpr-action-block">
       <slot name="top-block"
             :state="state"
             :state-text="topText"
             :trigger-distance="_topConfig.triggerDistance"
             :diff="diff">
-        <p class="default-text">{{ topText }}</p>
+        <p class="vpr-default-text">{{ topText }}</p>
       </slot>
     </div>
-    <div class="scroll-container">
+    <div class="vpr-scroll-container" rel="scrollContainer">
       <slot></slot>
     </div>
     <div v-if="bottomLoadMethod"
          :style="{ height: `${bottomBlockHeight}px`, marginBottom: `${-bottomBlockHeight}px` }"
-         class="action-block">
+         class="vpr-action-block">
       <slot name="bottom-block"
             :state="state"
             :state-text="bottomText"
             :trigger-distance="_bottomConfig.triggerDistance"
             :diff="diff">
-        <p class="default-text">{{ bottomText }}</p>
+        <p class="vpr-default-text">{{ bottomText }}</p>
       </slot>
     </div>
   </div>
@@ -80,15 +80,11 @@
       },
       topConfig: {
         type: Object,
-        default: () => {
-          return {};
-        }
+        default: {}
       },
       bottomConfig: {
         type: Object,
-        default: () => {
-          return {};
-        }
+        default: {}
       }
     },
     data() {
@@ -114,10 +110,10 @@
       };
     },
     computed: {
-      _topConfig: function () {
+      _topConfig() {
         return Object.assign({}, TOP_DEFAULT_CONFIG, this.topConfig);
       },
-      _bottomConfig: function () {
+      _bottomConfig() {
         return Object.assign({}, BOTTOM_DEFAULT_CONFIG, this.bottomConfig);
       }
     },
@@ -205,7 +201,9 @@
         this.distance = (this.currentY - this.startY) / this.distanceIndex + this.beforeDiff;
         // judge pan gesture direction, if not vertival just return
         // make sure that if some components embeded can handle horizontal pan gesture in here
-        if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) return;
+        if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) {
+          return;
+        }
         this.direction = this.distance > 0 ? 'down' : 'up';
 
         if (this.startScrollTop === 0 && this.direction === 'down' && this.isTopBounce) {
@@ -214,7 +212,9 @@
           this.diff = this.distance;
           this.isThrottleTopPull ? this.throttleEmitTopPull(this.diff) : this.$emit('top-pull', this.diff);
 
-          if (typeof this.topLoadMethod !== 'function') return;
+          if (typeof this.topLoadMethod !== 'function') {
+            return;
+          }
 
           if (this.distance < this._topConfig.triggerDistance &&
             this.state !== 'pull' && this.state !== 'loading') {
@@ -229,7 +229,9 @@
           this.diff = this.distance;
           this.isThrottleBottomPull ? this.throttleEmitBottomPull(this.diff) : this.$emit('bottom-pull', this.diff);
 
-          if (typeof this.bottomLoadMethod !== 'function') return;
+          if (typeof this.bottomLoadMethod !== 'function') {
+            return;
+          }
 
           if (Math.abs(this.distance) < this._bottomConfig.triggerDistance &&
             this.state !== 'pull' && this.state !== 'loading') {
@@ -242,7 +244,9 @@
       },
 
       handleTouchEnd() {
-        if (this.diff === 0) return;
+        if (this.diff === 0) {
+          return;
+        }
         if (this.state === 'trigger') {
           this.actionLoading();
           return;
@@ -263,7 +267,7 @@
       },
 
       throttleEmit(delay, mustRunDelay = 0, eventName) {
-        const throttleMethod = function () {
+        const throttleMethod = () => {
           const args = [...arguments];
           args.unshift(eventName);
           this.$emit.apply(this, args);
@@ -288,7 +292,7 @@
 
       init() {
         this.createThrottleMethods();
-        this.scrollEl = this.$el.querySelector('.scroll-container');
+        this.scrollEl = this.$refs.scrollContainer;
         this.bindEvents();
       }
     },
@@ -299,25 +303,25 @@
 </script>
 
 <style scoped>
-  .vue-pull-to-reload-wrapper {
+  .vpr-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
 
-  .scroll-container {
+  .vpr-scroll-container {
     flex: 1;
     overflow-x: hidden;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
-  .vue-pull-to-reload-wrapper .action-block {
+  .vpr-wrapper .vpr-action-block {
     position: relative;
     width: 100%;
   }
 
-  .default-text {
+  .vpr-default-text {
     height: 100%;
     line-height: 50px;
     text-align: center;

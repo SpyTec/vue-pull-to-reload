@@ -7,8 +7,8 @@ describe('dom', () => {
   it('create', () => {
     vm = createTest(PullTo, true);
     const elem = vm.$el;
-    expect(elem.classList.contains('vue-pull-to-reload-wrapper')).to.be.ok;
-    expect(elem.querySelector('.scroll-container')).to.be.ok;
+    expect(elem.classList.contains('vpr-wrapper')).to.be.ok;
+    expect(elem.querySelector('.vpr-scroll-container')).to.be.ok;
   });
 
   it('create action block', () => {
@@ -17,7 +17,7 @@ describe('dom', () => {
       bottomLoadMethod: () => {}
     }, true);
     const elem = vm.$el;
-    expect(elem.querySelectorAll('.action-block').length).to.be.equal(2);
+    expect(elem.querySelectorAll('.vpr-action-block').length).to.be.equal(2);
   });
 
   it('set prop BlockHeight', () => {
@@ -27,7 +27,7 @@ describe('dom', () => {
       topBlockHeight: 60,
       bottomBlockHeight: 60
     }, true);
-    const elems = vm.$el.querySelectorAll('.action-block');
+    const elems = vm.$el.querySelectorAll('.vpr-action-block');
     expect(elems[0].style.height).to.be.equal('60px');
     expect(elems[0].style.marginTop).to.be.equal('-60px');
     expect(elems[1].style.height).to.be.equal('60px');

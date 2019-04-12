@@ -189,11 +189,11 @@ var Component = __webpack_require__(44)(
   /* template */
   __webpack_require__(45),
   /* scopeId */
-  "data-v-d37c2ed4",
+  "data-v-0554531c",
   /* cssModules */
   null
 )
-Component.options.__file = "/home/spytec/Documents/JavaScriptProjects/vue-pull-to/src/vue-pull-to-reload.vue"
+Component.options.__file = "G:\\Users\\SpyTec\\Documents\\JavaScriptProjects\\vue-pull-to-reload\\src\\vue-pull-to-reload.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] vue-pull-to-reload.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -204,9 +204,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d37c2ed4", Component.options)
+    hotAPI.createRecord("data-v-0554531c", Component.options)
   } else {
-    hotAPI.reload("data-v-d37c2ed4", Component.options)
+    hotAPI.reload("data-v-0554531c", Component.options)
   }
 })()}
 
@@ -313,15 +313,11 @@ exports.default = {
     },
     topConfig: {
       type: Object,
-      default: function _default() {
-        return {};
-      }
+      default: {}
     },
     bottomConfig: {
       type: Object,
-      default: function _default() {
-        return {};
-      }
+      default: {}
     }
   },
   data: function data() {
@@ -436,7 +432,9 @@ exports.default = {
       this.distance = (this.currentY - this.startY) / this.distanceIndex + this.beforeDiff;
       // judge pan gesture direction, if not vertival just return
       // make sure that if some components embeded can handle horizontal pan gesture in here
-      if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) return;
+      if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) {
+        return;
+      }
       this.direction = this.distance > 0 ? 'down' : 'up';
 
       if (this.startScrollTop === 0 && this.direction === 'down' && this.isTopBounce) {
@@ -445,7 +443,9 @@ exports.default = {
         this.diff = this.distance;
         this.isThrottleTopPull ? this.throttleEmitTopPull(this.diff) : this.$emit('top-pull', this.diff);
 
-        if (typeof this.topLoadMethod !== 'function') return;
+        if (typeof this.topLoadMethod !== 'function') {
+          return;
+        }
 
         if (this.distance < this._topConfig.triggerDistance && this.state !== 'pull' && this.state !== 'loading') {
           this.actionPull();
@@ -458,7 +458,9 @@ exports.default = {
         this.diff = this.distance;
         this.isThrottleBottomPull ? this.throttleEmitBottomPull(this.diff) : this.$emit('bottom-pull', this.diff);
 
-        if (typeof this.bottomLoadMethod !== 'function') return;
+        if (typeof this.bottomLoadMethod !== 'function') {
+          return;
+        }
 
         if (Math.abs(this.distance) < this._bottomConfig.triggerDistance && this.state !== 'pull' && this.state !== 'loading') {
           this.actionPull();
@@ -468,7 +470,9 @@ exports.default = {
       }
     },
     handleTouchEnd: function handleTouchEnd() {
-      if (this.diff === 0) return;
+      if (this.diff === 0) {
+        return;
+      }
       if (this.state === 'trigger') {
         this.actionLoading();
         return;
@@ -486,13 +490,16 @@ exports.default = {
       }
     },
     throttleEmit: function throttleEmit(delay) {
+      var _arguments = arguments,
+          _this3 = this;
+
       var mustRunDelay = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       var eventName = arguments[2];
 
       var throttleMethod = function throttleMethod() {
-        var args = [].concat(Array.prototype.slice.call(arguments));
+        var args = [].concat(Array.prototype.slice.call(_arguments));
         args.unshift(eventName);
-        this.$emit.apply(this, args);
+        _this3.$emit.apply(_this3, args);
       };
 
       return (0, _utils.throttle)(throttleMethod, delay, mustRunDelay);
@@ -511,7 +518,7 @@ exports.default = {
     },
     init: function init() {
       this.createThrottleMethods();
-      this.scrollEl = this.$el.querySelector('.scroll-container');
+      this.scrollEl = this.$refs.scrollContainer;
       this.bindEvents();
     }
   },
@@ -1068,7 +1075,7 @@ $export($export.S + $export.F, 'Object', { assign: __webpack_require__(27) });
 
 exports = module.exports = __webpack_require__(43)(false);
 // Module
-exports.push([module.i, "\n.vue-pull-to-reload-wrapper[data-v-d37c2ed4] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n  -webkit-flex-direction: column;\n          flex-direction: column;\n  height: 100%;\n}\n.scroll-container[data-v-d37c2ed4] {\n  -webkit-box-flex: 1;\n  -webkit-flex: 1;\n          flex: 1;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n.vue-pull-to-reload-wrapper .action-block[data-v-d37c2ed4] {\n  position: relative;\n  width: 100%;\n}\n.default-text[data-v-d37c2ed4] {\n  height: 100%;\n  line-height: 50px;\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "\n.vpr-wrapper[data-v-0554531c] {\n  display: -webkit-box;\n  display: -webkit-flex;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n  -webkit-flex-direction: column;\n          flex-direction: column;\n  height: 100%;\n}\n.vpr-scroll-container[data-v-0554531c] {\n  -webkit-box-flex: 1;\n  -webkit-flex: 1;\n          flex: 1;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n.vpr-wrapper .vpr-action-block[data-v-0554531c] {\n  position: relative;\n  width: 100%;\n}\n.vpr-default-text[data-v-0554531c] {\n  height: 100%;\n  line-height: 50px;\n  text-align: center;\n}\n", ""]);
 
 
 
@@ -1226,35 +1233,38 @@ module.exports = function normalizeComponent (
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "vue-pull-to-reload-wrapper",
+    staticClass: "vpr-wrapper",
     style: ({
       height: _vm.wrapperHeight,
       position: 'absolute',
       marginTop: (_vm.diff + "px")
     })
   }, [(_vm.topLoadMethod) ? _c('div', {
-    staticClass: "action-block",
+    staticClass: "vpr-action-block",
     style: ({
       height: (_vm.topBlockHeight + "px"),
       marginTop: ((-_vm.topBlockHeight) + "px")
     })
   }, [_vm._t("top-block", [_c('p', {
-    staticClass: "default-text"
+    staticClass: "vpr-default-text"
   }, [_vm._v(_vm._s(_vm.topText))])], {
     state: _vm.state,
     stateText: _vm.topText,
     triggerDistance: _vm._topConfig.triggerDistance,
     diff: _vm.diff
   })], 2) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "scroll-container"
+    staticClass: "vpr-scroll-container",
+    attrs: {
+      "rel": "scrollContainer"
+    }
   }, [_vm._t("default")], 2), _vm._v(" "), (_vm.bottomLoadMethod) ? _c('div', {
-    staticClass: "action-block",
+    staticClass: "vpr-action-block",
     style: ({
       height: (_vm.bottomBlockHeight + "px"),
       marginBottom: ((-_vm.bottomBlockHeight) + "px")
     })
   }, [_vm._t("bottom-block", [_c('p', {
-    staticClass: "default-text"
+    staticClass: "vpr-default-text"
   }, [_vm._v(_vm._s(_vm.bottomText))])], {
     state: _vm.state,
     stateText: _vm.bottomText,
@@ -1266,7 +1276,7 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-d37c2ed4", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-0554531c", module.exports)
   }
 }
 
@@ -1281,13 +1291,13 @@ var content = __webpack_require__(42);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(47)("5c525727", content, false);
+var update = __webpack_require__(47)("640ced46", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../node_modules/css-loader/dist/cjs.js?{\"sourceMap\":false}!../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-d37c2ed4\",\"scoped\":true,\"hasInlineConfig\":false}!../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./vue-pull-to-reload.vue", function() {
-     var newContent = require("!!../node_modules/css-loader/dist/cjs.js?{\"sourceMap\":false}!../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-d37c2ed4\",\"scoped\":true,\"hasInlineConfig\":false}!../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./vue-pull-to-reload.vue");
+   module.hot.accept("!!../node_modules/css-loader/dist/cjs.js?{\"sourceMap\":false}!../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-0554531c\",\"scoped\":true,\"hasInlineConfig\":false}!../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./vue-pull-to-reload.vue", function() {
+     var newContent = require("!!../node_modules/css-loader/dist/cjs.js?{\"sourceMap\":false}!../node_modules/vue-loader/lib/style-compiler/index.js?{\"id\":\"data-v-0554531c\",\"scoped\":true,\"hasInlineConfig\":false}!../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./vue-pull-to-reload.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });

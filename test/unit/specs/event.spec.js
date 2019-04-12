@@ -24,7 +24,7 @@ describe('event', () => {
     let eTouchMove = createEvent('touchmove', true, true);
     eTouchMove.touches = [{clientY: 10}];
 
-    const elem = vm.$el.querySelector('.scroll-container');
+    const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
     elem.dispatchEvent(eTouchMove);
 
@@ -55,7 +55,7 @@ describe('event', () => {
     let eTouchMove = createEvent('touchmove', true, true);
     eTouchMove.touches = [{clientY: -30}];
 
-    const elem = vm.$el.querySelector('.scroll-container');
+    const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
     elem.dispatchEvent(eTouchMove);
 
@@ -87,7 +87,7 @@ describe('event', () => {
     let eTouchMove = createEvent('touchmove', true, true);
     eTouchMove.touches = [{clientY: 60}];
 
-    const elem = vm.$el.querySelector('.scroll-container');
+    const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
     elem.dispatchEvent(eTouchMove);
 
@@ -119,7 +119,7 @@ describe('event', () => {
     let eTouchMove = createEvent('touchmove', true, true);
     eTouchMove.touches = [{clientY: -60}];
 
-    const elem = vm.$el.querySelector('.scroll-container');
+    const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
     elem.dispatchEvent(eTouchMove);
 
@@ -146,7 +146,7 @@ describe('event', () => {
     }, true);
 
     let event = createEvent('scroll', true, true);
-    const elem = vm.$el.querySelector('.scroll-container');
+    const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(event);
 
     setTimeout(() => {
@@ -172,11 +172,11 @@ describe('event', () => {
     }, true);
 
     let event = createEvent('scroll', true, true);
-    const elem = vm.$el.querySelector('.scroll-container');
+    const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(event);
 
     setTimeout(() => {
-      expect(res).to.be.exist;
+      expect(res).to.exist();
       done();
     }, 200);
   });
