@@ -16,7 +16,7 @@
   </pull-to>
 </template>
 
-<style scoped rel="stylesheet/less" lang="less">
+<style scoped lang="scss">
   .loading-bar {
     height: 40px;
     text-align: center;
@@ -39,30 +39,30 @@
 </style>
 
 <script type="text/babel">
-  import PullTo from '@/vue-pull-to';
+import PullTo from '@/vue-pull-to-reload';
 
-  export default {
-    name: 'infinite-scroll',
-    components: {
-      PullTo
-    },
-    data() {
-      return {
-        dataList: [
-          '(ง •̀_•́)ง', '(´・ω・`) ', '（/TДT)/ ', '>ㅂ<',
-          'o(*≧▽≦)ツ', '(≖ ‿ ≖)✧', '(o^∇^o)ﾉ', ' (´・ω・)ﾉ',
-          '(´・ω・`)', 'ヽ(･ω･｡)ﾉ', '(｀･ω･´)', '╰(*°▽°*)╯',
-          '╮(￣▽￣)╭', '(￣▽￣)~*', '(⊙ˍ⊙)', '(￣0 ￣)y'
-        ],
-        iconLink: ''
-      };
-    },
-    methods: {
-      loadmore() {
-        setTimeout(() => {
-          this.dataList = this.dataList.concat(this.dataList);
-        }, 1000);
-      }
+export default {
+  name: 'infinite-scroll',
+  components: {
+    PullTo
+  },
+  data () {
+    return {
+      dataList: [
+        '(ง •̀_•́)ง', '(´・ω・`) ', '（/TДT)/ ', '>ㅂ<',
+        'o(*≧▽≦)ツ', '(≖ ‿ ≖)✧', '(o^∇^o)ﾉ', ' (´・ω・)ﾉ',
+        '(´・ω・`)', 'ヽ(･ω･｡)ﾉ', '(｀･ω･´)', '╰(*°▽°*)╯',
+        '╮(￣▽￣)╭', '(￣▽￣)~*', '(⊙ˍ⊙)', '(￣0 ￣)y'
+      ],
+      iconLink: ''
+    };
+  },
+  methods: {
+    loadmore () {
+      setTimeout(() => {
+        this.dataList = this.dataList.concat(this.dataList);
+      }, 1000);
     }
-  };
+  }
+};
 </script>

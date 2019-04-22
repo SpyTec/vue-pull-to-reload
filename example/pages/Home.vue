@@ -7,7 +7,7 @@
         <use xlink:href="#icon-face-20"></use>
       </svg>
     </div>
-    <pull-to class="scroller-view">
+    <pull-to-reload class="scroller-view">
       <ul class="list">
         <li>
           <router-link href="/bounce-scroll">
@@ -42,11 +42,11 @@
           </router-link>
         </li>
       </ul>
-    </pull-to>
+    </pull-to-reload>
   </section>
 </template>
 
-<style scoped rel="stylesheet/less" lang="less">
+<style scoped lang="scss">
   .wrapper {
     display: flex;
     flex-direction: column;
@@ -112,14 +112,14 @@
 </style>
 
 <script type="text/babel">
-  import PullTo from '@/vue-pull-to';
-  import RouterLink from '../components/RouterLink';
+import PullToReload from '@/vue-pull-to-reload';
+import RouterLink from '../components/RouterLink';
 
-  export default {
-    name: 'home',
-    components: {
-      RouterLink,
-      PullTo
-    }
-  };
+export default {
+  name: 'home',
+  components: {
+    RouterLink,
+    PullToReload
+  }
+};
 </script>

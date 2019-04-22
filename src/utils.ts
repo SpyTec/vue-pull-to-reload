@@ -1,9 +1,10 @@
 // http://www.alloyteam.com/2012/11/javascript-throttle/
 
-export function throttle (fn, delay, mustRunDelay = 0) {
-  let timer = null;
-  let tStart;
+export function throttle (fn: any, delay: any, mustRunDelay = 0): Function {
+  let timer: any = null;
+  let tStart: any;
   return function () {
+    // @ts-ignore
     const context = this;
     const args = arguments;
     const tCurr = +new Date();

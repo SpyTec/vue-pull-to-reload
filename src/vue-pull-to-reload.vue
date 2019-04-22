@@ -12,7 +12,7 @@
         <p class="vpr-default-text">{{ topText }}</p>
       </slot>
     </div>
-    <div class="vpr-scroll-container" rel="scrollContainer">
+    <div class="vpr-scroll-container" ref="scrollContainer">
       <slot></slot>
     </div>
     <div v-if="bottomLoadMethod"
@@ -29,277 +29,240 @@
   </div>
 </template>
 
-<script type="text/babel">
-  import { throttle } from './utils';
-  import { TOP_DEFAULT_CONFIG, BOTTOM_DEFAULT_CONFIG } from './config';
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { throttle } from './utils';
+import { TOP_DEFAULT_CONFIG, BOTTOM_DEFAULT_CONFIG } from './config';
 
-  export default {
-    name: 'vue-pull-to-reload',
-    props: {
-      distanceIndex: {
-        type: Number,
-        default: 2
-      },
-      topBlockHeight: {
-        type: Number,
-        default: 50
-      },
-      bottomBlockHeight: {
-        type: Number,
-        default: 50
-      },
-      wrapperHeight: {
-        type: String,
-        default: '100%'
-      },
-      topLoadMethod: {
-        type: Function
-      },
-      bottomLoadMethod: {
-        type: Function
-      },
-      isThrottleTopPull: {
-        type: Boolean,
-        default: true
-      },
-      isThrottleBottomPull: {
-        type: Boolean,
-        default: true
-      },
-      isThrottleScroll: {
-        type: Boolean,
-        default: true
-      },
-      isTopBounce: {
-        type: Boolean,
-        default: true
-      },
-      isBottomBounce: {
-        type: Boolean,
-        default: true
-      },
-      topConfig: {
-        type: Object,
-        default: {}
-      },
-      bottomConfig: {
-        type: Object,
-        default: {}
-      }
-    },
-    data() {
-      return {
-        scrollEl: null,
-        startScrollTop: 0,
-        startY: 0,
-        startX: 0,
-        currentY: 0,
-        currentX: 0,
-        distance: 0,
-        direction: 0,
-        diff: 0,
-        beforeDiff: 0,
-        topText: '',
-        bottomText: '',
-        state: '',
-        bottomReached: false,
-        throttleEmitTopPull: null,
-        throttleEmitBottomPull: null,
-        throttleEmitScroll: null,
-        throttleOnInfiniteScroll: null
-      };
-    },
-    computed: {
-      _topConfig() {
-        return Object.assign({}, TOP_DEFAULT_CONFIG, this.topConfig);
-      },
-      _bottomConfig() {
-        return Object.assign({}, BOTTOM_DEFAULT_CONFIG, this.bottomConfig);
-      }
-    },
-    watch: {
-      state(val) {
-        if (this.direction === 'down') {
-          this.$emit('top-state-change', val);
-        } else {
-          this.$emit('bottom-state-change', val);
-        }
-      }
-    },
-    methods: {
-      actionPull() {
-        this.state = 'pull';
-        this.direction === 'down'
-          ? this.topText = this._topConfig.pullText
-          : this.bottomText = this._bottomConfig.pullText;
-      },
-      actionTrigger() {
-        this.state = 'trigger';
-        this.direction === 'down'
-          ? this.topText = this._topConfig.triggerText
-          : this.bottomText = this._bottomConfig.triggerText;
-      },
-      actionLoading() {
-        this.state = 'loading';
-        if (this.direction === 'down') {
-          this.topText = this._topConfig.loadingText;
-          /* eslint-disable no-useless-call */
-          this.topLoadMethod.call(this, this.actionLoaded);
-          this.scrollTo(this._topConfig.stayDistance);
-        } else {
-          this.bottomText = this._bottomConfig.loadingText;
-          this.bottomLoadMethod.call(this, this.actionLoaded);
-          this.scrollTo(-this._bottomConfig.stayDistance);
-        }
-      },
-      actionLoaded(loadState = 'done') {
-        this.state = `loaded-${loadState}`;
-        let loadedStayTime;
-        if (this.direction === 'down') {
-          this.topText = loadState === 'done'
-            ? this._topConfig.doneText
-            : this._topConfig.failText;
-          loadedStayTime = this._topConfig.loadedStayTime;
-        } else {
-          this.bottomText = loadState === 'done'
-            ? this._bottomConfig.doneText
-            : this._bottomConfig.failText;
-          loadedStayTime = this._bottomConfig.loadedStayTime;
-        }
-        setTimeout(() => {
-          this.scrollTo(0);
+@Component({
+  name: 'vue-pull-to-reload'
+})
+export default class VuePullToReload extends Vue {
+  @Prop({ type: Number, default: 2 }) readonly distanceIndex!: number;
+  @Prop({ type: Number, default: 50 }) readonly topBlockHeight!: number;
+  @Prop({ type: Number, default: 50 }) readonly bottomBlockHeight!: number;
+  @Prop({ type: String, default: '100%' }) readonly wrapperHeight!: string;
+  @Prop({ type: Function }) readonly topLoadMethod!: Function;
+  @Prop({ type: Function }) readonly bottomLoadMethod!: Function;
+  @Prop({ type: Boolean, default: true }) readonly isThrottleTopPull!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly isThrottleBottomPull!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly isThrottleScroll!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly isTopBounce!: boolean;
+  @Prop({ type: Boolean, default: true }) readonly isBottomBounce!: boolean;
+  @Prop({ type: Object, default: () => {} }) readonly topConfig!: object;
+  @Prop({ type: Object, default: () => {} }) readonly bottomConfig!: object;
+  scrollEl!: HTMLElement;
+  startScrollTop = 0;
+  startY = 0;
+  startX = 0;
+  currentY = 0;
+  currentX = 0;
+  distance = 0;
+  direction = '';
+  diff = 0;
+  beforeDiff = 0;
+  topText = '';
+  bottomText = '';
+  state = '';
+  bottomReached = false;
+  /*  throttleEmitTopPull:Function|null = null;
+  throttleEmitBottomPull:Function|null = null;
+  throttleEmitScroll:Function|null = null;
+  throttleOnInfiniteScroll:Function|null = null; */
 
-          // reset state
-          setTimeout(() => {
-            this.state = '';
-          }, 200);
-        }, loadedStayTime);
-      },
-      scrollTo(y, duration = 200) {
-        this.$el.style.transition = `${duration}ms`;
-        this.diff = y;
-        setTimeout(() => {
-          this.$el.style.transition = '';
-        }, duration);
-      },
+  throttleEmitTopPull = this.throttleEmit(200, 300, 'top-pull');
+  throttleEmitBottomPull = this.throttleEmit(200, 300, 'bottom-pull');
+  throttleEmitScroll = this.throttleEmit(100, 150, 'scroll');
+  throttleOnInfiniteScroll = throttle(this.onInfiniteScroll, 400);
 
-      checkBottomReached() {
-        return this.scrollEl.scrollTop + this.scrollEl.offsetHeight + 1 >= this.scrollEl.scrollHeight;
-      },
+  get _topConfig () {
+    return Object.assign({}, TOP_DEFAULT_CONFIG, this.topConfig);
+  };
 
-      handleTouchStart(event) {
-        this.startY = event.touches[0].clientY;
-        this.startX = event.touches[0].clientX;
-        this.beforeDiff = this.diff;
-        this.startScrollTop = this.scrollEl.scrollTop;
-        this.bottomReached = this.checkBottomReached();
-      },
-
-      handleTouchMove(event) {
-        this.currentY = event.touches[0].clientY;
-        this.currentX = event.touches[0].clientX;
-        this.distance = (this.currentY - this.startY) / this.distanceIndex + this.beforeDiff;
-        // judge pan gesture direction, if not vertival just return
-        // make sure that if some components embeded can handle horizontal pan gesture in here
-        if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) {
-          return;
-        }
-        this.direction = this.distance > 0 ? 'down' : 'up';
-
-        if (this.startScrollTop === 0 && this.direction === 'down' && this.isTopBounce) {
-          event.preventDefault();
-          event.stopPropagation();
-          this.diff = this.distance;
-          this.isThrottleTopPull ? this.throttleEmitTopPull(this.diff) : this.$emit('top-pull', this.diff);
-
-          if (typeof this.topLoadMethod !== 'function') {
-            return;
-          }
-
-          if (this.distance < this._topConfig.triggerDistance &&
-            this.state !== 'pull' && this.state !== 'loading') {
-            this.actionPull();
-          } else if (this.distance >= this._topConfig.triggerDistance &&
-            this.state !== 'trigger' && this.state !== 'loading') {
-            this.actionTrigger();
-          }
-        } else if (this.bottomReached && this.direction === 'up' && this.isBottomBounce) {
-          event.preventDefault();
-          event.stopPropagation();
-          this.diff = this.distance;
-          this.isThrottleBottomPull ? this.throttleEmitBottomPull(this.diff) : this.$emit('bottom-pull', this.diff);
-
-          if (typeof this.bottomLoadMethod !== 'function') {
-            return;
-          }
-
-          if (Math.abs(this.distance) < this._bottomConfig.triggerDistance &&
-            this.state !== 'pull' && this.state !== 'loading') {
-            this.actionPull();
-          } else if (Math.abs(this.distance) >= this._bottomConfig.triggerDistance &&
-            this.state !== 'trigger' && this.state !== 'loading') {
-            this.actionTrigger();
-          }
-        }
-      },
-
-      handleTouchEnd() {
-        if (this.diff === 0) {
-          return;
-        }
-        if (this.state === 'trigger') {
-          this.actionLoading();
-          return;
-        }
-        // pull cancel
-        this.scrollTo(0);
-      },
-
-      handleScroll(event) {
-        this.isThrottleScroll ? this.throttleEmitScroll(event) : this.$emit('scroll', event);
-        this.throttleOnInfiniteScroll();
-      },
-
-      onInfiniteScroll() {
-        if (this.checkBottomReached()) {
-          this.$emit('infinite-scroll');
-        }
-      },
-
-      throttleEmit(delay, mustRunDelay = 0, eventName) {
-        const throttleMethod = () => {
-          const args = [...arguments];
-          args.unshift(eventName);
-          this.$emit.apply(this, args);
-        };
-
-        return throttle(throttleMethod, delay, mustRunDelay);
-      },
-
-      bindEvents() {
-        this.scrollEl.addEventListener('touchstart', this.handleTouchStart);
-        this.scrollEl.addEventListener('touchmove', this.handleTouchMove);
-        this.scrollEl.addEventListener('touchend', this.handleTouchEnd);
-        this.scrollEl.addEventListener('scroll', this.handleScroll);
-      },
-
-      createThrottleMethods() {
-        this.throttleEmitTopPull = this.throttleEmit(200, 300, 'top-pull');
-        this.throttleEmitBottomPull = this.throttleEmit(200, 300, 'bottom-pull');
-        this.throttleEmitScroll = this.throttleEmit(100, 150, 'scroll');
-        this.throttleOnInfiniteScroll = throttle(this.onInfiniteScroll, 400);
-      },
-
-      init() {
-        this.createThrottleMethods();
-        this.scrollEl = this.$refs.scrollContainer;
-        this.bindEvents();
-      }
-    },
-    mounted() {
-      this.init();
+  get _bottomConfig () {
+    return Object.assign({}, BOTTOM_DEFAULT_CONFIG, this.bottomConfig);
+  }
+  @Watch('state')
+  onStateChange (val: string) {
+    if (this.direction === 'down') {
+      this.$emit('top-state-change', val);
+    } else {
+      this.$emit('bottom-state-change', val);
+    }
+  }
+  actionPull () {
+    this.state = 'pull';
+    this.direction === 'down'
+      ? this.topText = this._topConfig.pullText
+      : this.bottomText = this._bottomConfig.pullText;
+  };
+  actionTrigger () {
+    this.state = 'trigger';
+    this.direction === 'down'
+      ? this.topText = this._topConfig.triggerText
+      : this.bottomText = this._bottomConfig.triggerText;
+  };
+  actionLoading () {
+    this.state = 'loading';
+    if (this.direction === 'down') {
+      this.topText = this._topConfig.loadingText;
+      /* eslint-disable no-useless-call */
+      this.topLoadMethod.call(this, this.actionLoaded);
+      this.scrollTo(this._topConfig.stayDistance);
+    } else {
+      this.bottomText = this._bottomConfig.loadingText;
+      this.bottomLoadMethod.call(this, this.actionLoaded);
+      this.scrollTo(-this._bottomConfig.stayDistance);
     }
   };
+  actionLoaded (loadState = 'done') {
+    this.state = `loaded-${loadState}`;
+    let loadedStayTime;
+    if (this.direction === 'down') {
+      this.topText = loadState === 'done'
+        ? this._topConfig.doneText
+        : this._topConfig.failText;
+      loadedStayTime = this._topConfig.loadedStayTime;
+    } else {
+      this.bottomText = loadState === 'done'
+        ? this._bottomConfig.doneText
+        : this._bottomConfig.failText;
+      loadedStayTime = this._bottomConfig.loadedStayTime;
+    }
+    setTimeout(() => {
+      this.scrollTo(0);
+
+      // reset state
+      setTimeout(() => {
+        this.state = '';
+      }, 200);
+    }, loadedStayTime);
+  };
+  scrollTo (y: number, duration: number = 200) {
+    // @ts-ignore
+    this.$el.style.transition = `${duration}ms`;
+    this.diff = y;
+    setTimeout(() => {
+      // @ts-ignore
+      this.$el.style.transition = '';
+    }, duration);
+  };
+
+  checkBottomReached () {
+    return this.scrollEl.scrollTop + this.scrollEl.offsetHeight + 1 >= this.scrollEl.scrollHeight;
+  };
+
+  handleTouchStart (event: TouchEvent) {
+    this.startY = event.touches[0].clientY;
+    this.startX = event.touches[0].clientX;
+    this.beforeDiff = this.diff;
+    this.startScrollTop = this.scrollEl.scrollTop;
+    this.bottomReached = this.checkBottomReached();
+  };
+
+  handleTouchMove (event: TouchEvent) {
+    this.currentY = event.touches[0].clientY;
+    this.currentX = event.touches[0].clientX;
+    this.distance = (this.currentY - this.startY) / this.distanceIndex + this.beforeDiff;
+    // judge pan gesture direction, if not vertival just return
+    // make sure that if some components embeded can handle horizontal pan gesture in here
+    if (Math.abs(this.currentY - this.startY) < Math.abs(this.currentX - this.startX)) {
+      return;
+    }
+    this.direction = this.distance > 0 ? 'down' : 'up';
+
+    if (this.startScrollTop === 0 && this.direction === 'down' && this.isTopBounce) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.diff = this.distance;
+      this.isThrottleTopPull ? this.throttleEmitTopPull(this.diff) : this.$emit('top-pull', this.diff);
+
+      if (typeof this.topLoadMethod !== 'function') {
+        return;
+      }
+
+      if (this.distance < this._topConfig.triggerDistance &&
+              this.state !== 'pull' && this.state !== 'loading') {
+        this.actionPull();
+      } else if (this.distance >= this._topConfig.triggerDistance &&
+              this.state !== 'trigger' && this.state !== 'loading') {
+        this.actionTrigger();
+      }
+    } else if (this.bottomReached && this.direction === 'up' && this.isBottomBounce) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.diff = this.distance;
+      this.isThrottleBottomPull ? this.throttleEmitBottomPull(this.diff) : this.$emit('bottom-pull', this.diff);
+
+      if (typeof this.bottomLoadMethod !== 'function') {
+        return;
+      }
+
+      if (Math.abs(this.distance) < this._bottomConfig.triggerDistance &&
+              this.state !== 'pull' && this.state !== 'loading') {
+        this.actionPull();
+      } else if (Math.abs(this.distance) >= this._bottomConfig.triggerDistance &&
+              this.state !== 'trigger' && this.state !== 'loading') {
+        this.actionTrigger();
+      }
+    }
+  };
+
+  handleTouchEnd () {
+    if (this.diff === 0) {
+      return;
+    }
+    if (this.state === 'trigger') {
+      this.actionLoading();
+      return;
+    }
+    // pull cancel
+    this.scrollTo(0);
+  };
+
+  handleScroll (event: Event) {
+    this.isThrottleScroll ? this.throttleEmitScroll(event) : this.$emit('scroll', event);
+    this.throttleOnInfiniteScroll();
+  };
+
+  onInfiniteScroll () {
+    if (this.checkBottomReached()) {
+      this.$emit('infinite-scroll');
+    }
+  };
+
+  throttleEmit (delay: number, mustRunDelay = 0, eventName: string) {
+    const throttleMethod = () => {
+      const args = [...arguments];
+      args.unshift(eventName);
+      // @ts-ignore
+      this.$emit.apply(this, args);
+    };
+
+    return throttle(throttleMethod, delay, mustRunDelay);
+  };
+
+  bindEvents () {
+    this.scrollEl.addEventListener('touchstart', this.handleTouchStart);
+    this.scrollEl.addEventListener('touchmove', this.handleTouchMove);
+    this.scrollEl.addEventListener('touchend', this.handleTouchEnd);
+    this.scrollEl.addEventListener('scroll', this.handleScroll);
+  };
+
+  createThrottleMethods () {
+    this.throttleEmitTopPull = this.throttleEmit(200, 300, 'top-pull');
+    this.throttleEmitBottomPull = this.throttleEmit(200, 300, 'bottom-pull');
+    this.throttleEmitScroll = this.throttleEmit(100, 150, 'scroll');
+    this.throttleOnInfiniteScroll = throttle(this.onInfiniteScroll, 400);
+  };
+  mounted () {
+    this.createThrottleMethods();
+    this.scrollEl = (this.$refs.scrollContainer as HTMLElement);
+    if (this.scrollEl) {
+      this.bindEvents();
+    }
+  }
+}
 </script>
 
 <style scoped>

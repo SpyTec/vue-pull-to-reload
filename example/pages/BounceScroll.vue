@@ -1,5 +1,5 @@
 <template>
-  <pull-to>
+  <pull-to-reload>
     <ul class="list">
       <li>
         (=ﾟωﾟ)ﾉ
@@ -92,20 +92,20 @@
         (╭￣3￣)╭♡
       </li>
     </ul>
-  </pull-to>
+  </pull-to-reload>
 </template>
 
-<style scoped rel="stylesheet/less" lang="less">
+<style scoped lang="scss">
 </style>
 
 <script type="text/babel">
-  import PullTo from '@/vue-pull-to';
+import PullToReload from '@/vue-pull-to-reload';
 
-  export default {
-    name: 'bounce-scroll',
-    components: {
-      PullTo
-    },
-    methods: {}
-  };
+export default {
+  name: 'bounce-scroll',
+  components: {
+    PullToReload
+  },
+  methods: {}
+};
 </script>

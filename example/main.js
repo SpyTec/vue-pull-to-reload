@@ -4,6 +4,6 @@ import App from './App';
 console.log(Vue.version);
 /* eslint-disable no-new */
 new Vue({
-  el: '#app-wrap',
+  el: '#app',
   render: h => h(App)
 });

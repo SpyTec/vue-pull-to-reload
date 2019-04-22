@@ -1,9 +1,9 @@
 <template>
-  <pull-to
+  <pull-to-reload
     :bottom-load-method="loadmore"
     @bottom-state-change="stateChange">
     <ul class="list">
-      <li v-for="item in dataList">
+      <li v-for="(item, i) in dataList" :key="i">
         {{ item }}
       </li>
     </ul>
@@ -21,10 +21,10 @@
         {{ props.stateText }}
       </div>
     </template>
-  </pull-to>
+  </pull-to-reload>
 </template>
 
-<style scoped rel="stylesheet/less" lang="less">
+<style scoped lang="scss">
   .bottom-load-wrapper {
     line-height: 50px;
     text-align: center;
@@ -51,41 +51,41 @@
 </style>
 
 <script type="text/babel">
-  import PullTo from '@/vue-pull-to';
+import PullToReload from '@/vue-pull-to-reload';
 
-  export default {
-    name: 'simple-pull-to-loadmore',
-    components: {
-      PullTo
+export default {
+  name: 'simple-pull-to-loadmore',
+  components: {
+    PullToReload
+  },
+  data () {
+    return {
+      dataList: [
+        '(ง •̀_•́)ง', '(´・ω・`) ', '（/TДT)/ ', '>ㅂ<',
+        'o(*≧▽≦)ツ', '(≖ ‿ ≖)✧', '(o^∇^o)ﾉ', ' (´・ω・)ﾉ',
+        '(´・ω・`)', 'ヽ(･ω･｡)ﾉ', '(｀･ω･´)', '╰(*°▽°*)╯',
+        '╮(￣▽￣)╭', '(￣▽￣)~*', '(⊙ˍ⊙)', '(￣0 ￣)y'
+      ],
+      iconLink: ''
+    };
+  },
+  methods: {
+    loadmore (loaded) {
+      setTimeout(() => {
+        this.dataList = this.dataList.concat(this.dataList);
+        loaded('done');
+      }, 2000);
     },
-    data() {
-      return {
-        dataList: [
-          '(ง •̀_•́)ง', '(´・ω・`) ', '（/TДT)/ ', '>ㅂ<',
-          'o(*≧▽≦)ツ', '(≖ ‿ ≖)✧', '(o^∇^o)ﾉ', ' (´・ω・)ﾉ',
-          '(´・ω・`)', 'ヽ(･ω･｡)ﾉ', '(｀･ω･´)', '╰(*°▽°*)╯',
-          '╮(￣▽￣)╭', '(￣▽￣)~*', '(⊙ˍ⊙)', '(￣0 ￣)y'
-        ],
-        iconLink: ''
-      };
-    },
-    methods: {
-      loadmore(loaded) {
-        setTimeout(() => {
-          this.dataList = this.dataList.concat(this.dataList);
-          loaded('done');
-        }, 2000);
-      },
 
-      stateChange(state) {
-        if (state === 'pull' || state === 'trigger') {
-          this.iconLink = '#icon-arrow-bottom';
-        } else if (state === 'loading') {
-          this.iconLink = '#icon-loading';
-        } else if (state === 'loaded-done') {
-          this.iconLink = '#icon-finish';
-        }
+    stateChange (state) {
+      if (state === 'pull' || state === 'trigger') {
+        this.iconLink = '#icon-arrow-bottom';
+      } else if (state === 'loading') {
+        this.iconLink = '#icon-loading';
+      } else if (state === 'loaded-done') {
+        this.iconLink = '#icon-finish';
       }
     }
-  };
+  }
+};
 </script>

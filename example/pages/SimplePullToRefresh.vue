@@ -24,7 +24,7 @@
   </pull-to>
 </template>
 
-<style scoped rel="stylesheet/less" lang="less">
+<style scoped lang="scss">
   .top-load-wrapper {
     line-height: 50px;
     text-align: center;
@@ -51,41 +51,41 @@
 </style>
 
 <script type="text/babel">
-  import PullTo from '@/vue-pull-to';
+import PullTo from '@/vue-pull-to-reload';
 
-  export default {
-    name: 'simple-pull-to-refresh',
-    components: {
-      PullTo
+export default {
+  name: 'simple-pull-to-refresh',
+  components: {
+    PullTo
+  },
+  data () {
+    return {
+      dataList: [
+        '(ง •̀_•́)ง', '(´・ω・`) ', '（/TДT)/ ', '>ㅂ<',
+        'o(*≧▽≦)ツ', '(≖ ‿ ≖)✧', '(o^∇^o)ﾉ', ' (´・ω・)ﾉ',
+        '(´・ω・`)', 'ヽ(･ω･｡)ﾉ', '(｀･ω･´)', '╰(*°▽°*)╯',
+        '╮(￣▽￣)╭', '(￣▽￣)~*', '(⊙ˍ⊙)', '(￣0 ￣)y'
+      ],
+      iconLink: ''
+    };
+  },
+  methods: {
+    refresh (loaded) {
+      setTimeout(() => {
+        this.dataList.reverse();
+        loaded('done');
+      }, 2000);
     },
-    data() {
-      return {
-        dataList: [
-          '(ง •̀_•́)ง', '(´・ω・`) ', '（/TДT)/ ', '>ㅂ<',
-          'o(*≧▽≦)ツ', '(≖ ‿ ≖)✧', '(o^∇^o)ﾉ', ' (´・ω・)ﾉ',
-          '(´・ω・`)', 'ヽ(･ω･｡)ﾉ', '(｀･ω･´)', '╰(*°▽°*)╯',
-          '╮(￣▽￣)╭', '(￣▽￣)~*', '(⊙ˍ⊙)', '(￣0 ￣)y'
-        ],
-        iconLink: ''
-      };
-    },
-    methods: {
-      refresh(loaded) {
-        setTimeout(() => {
-          this.dataList.reverse();
-          loaded('done');
-        }, 2000);
-      },
 
-      stateChange(state) {
-        if (state === 'pull' || state === 'trigger') {
-          this.iconLink = '#icon-arrow-bottom';
-        } else if (state === 'loading') {
-          this.iconLink = '#icon-loading';
-        } else if (state === 'loaded-done') {
-          this.iconLink = '#icon-finish';
-        }
+    stateChange (state) {
+      if (state === 'pull' || state === 'trigger') {
+        this.iconLink = '#icon-arrow-bottom';
+      } else if (state === 'loading') {
+        this.iconLink = '#icon-loading';
+      } else if (state === 'loaded-done') {
+        this.iconLink = '#icon-finish';
       }
     }
-  };
+  }
+};
 </script>

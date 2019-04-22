@@ -4,7 +4,7 @@
   </header>
 </template>
 
-<style scoped rel="stylesheet/less" lang="less">
+<style scoped lang="scss">
   .app-header {
     position: absolute;
     left: 0;
@@ -23,20 +23,24 @@
     font-weight: 300;
     line-height: 50px;
     text-align: center;
+    margin: 0;
   }
 </style>
 
 <script type="text/babel">
-  export default {
-    name: 'app-header',
-    data () {
-      return {
-      };
-    },
-    props: {
-      isBack: true
-    },
-    methods: {},
-    watch: {}
-  };
+export default {
+  name: 'app-header',
+  data () {
+    return {
+    };
+  },
+  props: {
+    isBack: {
+      type: Boolean,
+      default: true
+    }
+  },
+  methods: {},
+  watch: {}
+};
 </script>
