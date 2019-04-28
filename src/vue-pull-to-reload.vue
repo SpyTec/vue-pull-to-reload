@@ -106,12 +106,11 @@ export default class VuePullToReload extends Vue {
     this.state = 'loading';
     if (this.direction === 'down') {
       this.topText = this._topConfig.loadingText;
-      /* eslint-disable no-useless-call */
-      this.topLoadMethod.call(this, this.actionLoaded);
+      this.topLoadMethod(this.actionLoaded);
       this.scrollTo(this._topConfig.stayDistance);
     } else {
       this.bottomText = this._bottomConfig.loadingText;
-      this.bottomLoadMethod.call(this, this.actionLoaded);
+      this.bottomLoadMethod(this.actionLoaded);
       this.scrollTo(-this._bottomConfig.stayDistance);
     }
   };

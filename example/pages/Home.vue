@@ -10,7 +10,7 @@
     <pull-to-reload class="scroller-view">
       <ul class="list">
         <li>
-          <router-link href="/bounce-scroll">
+          <router-link to="/bounce-scroll">
             Bounce scroll
             <svg class="icon icon-arrow" aria-hidden="true">
               <use xlink:href="#icon-arrow-right"></use>
@@ -18,7 +18,7 @@
           </router-link>
         </li>
         <li>
-          <router-link href="/simple-pullto-refresh">
+          <router-link to="/simple-pullto-refresh">
             Simple pull to refresh
             <svg class="icon icon-arrow" aria-hidden="true">
               <use xlink:href="#icon-arrow-right"></use>
@@ -26,7 +26,7 @@
           </router-link>
         </li>
         <li>
-          <router-link href="/simple-pullto-loadmore">
+          <router-link to="/simple-pullto-loadmore">
             Simple pull to load more
             <svg class="icon icon-arrow" aria-hidden="true">
               <use xlink:href="#icon-arrow-right"></use>
@@ -34,7 +34,7 @@
           </router-link>
         </li>
         <li>
-          <router-link href="/infinite-scroll">
+          <router-link to="/infinite-scroll">
             Infinite scroll
             <svg class="icon icon-arrow" aria-hidden="true">
               <use xlink:href="#icon-arrow-right"></use>
@@ -113,12 +113,10 @@
 
 <script type="text/babel">
 import PullToReload from '@/vue-pull-to-reload';
-import RouterLink from '../components/RouterLink';
 
 export default {
   name: 'home',
   components: {
-    RouterLink,
     PullToReload
   }
 };
