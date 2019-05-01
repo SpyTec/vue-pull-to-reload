@@ -1,37 +1,21 @@
-/* eslint-disable */
-import {createTest, createVue, createEvent} from '../utils';
-import PullTo from '../../../src';
+import { mount } from '@vue/test-utils';
+import PullToReload from '../../../src/index';
 
 describe('event', () => {
   it('top pull', (done) => {
+    jest.useFakeTimers();
     let res;
-    const vm = createVue({
-      template: `
-        <div style="height: 500px">
-          <pull-to @top-pull="onTopPull"><div></div></pull-to>
-        </div>
-      `,
-      components: {PullTo},
-      methods: {
-        onTopPull(e) {
-          res = e;
-        }
-      }
-    }, true);
+    const wrapper = mount(PullToReload);
 
     let eTouchStart = createEvent('touchstart', true, true);
-    eTouchStart.touches = [{clientY: 0}];
+    eTouchStart.touches = [{ clientY: 0 }];
     let eTouchMove = createEvent('touchmove', true, true);
-    eTouchMove.touches = [{clientY: 10}];
+    eTouchMove.touches = [{ clientY: 10 }];
 
-    const elem = vm.$el.querySelector('.vpr-scroll-container');
+    const elem = wrapper.find({ ref: 'scrollContainer' }); // vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
     elem.dispatchEvent(eTouchMove);
-
-    setTimeout(() => {
-      expect(res).to.be.exist;
-      done();
-    }, 350);
+    jest.runAllTimers();
   });
 
   it('bottom pull', (done) => {
@@ -42,18 +26,18 @@ describe('event', () => {
           <pull-to @bottom-pull="onBottomPull"><div></div></pull-to>
         </div>
       `,
-      components: {PullTo},
+      components: { PullToReload },
       methods: {
-        onBottomPull(e) {
+        onBottomPull (e) {
           res = e;
         }
       }
     }, true);
 
     let eTouchStart = createEvent('touchstart', true, true);
-    eTouchStart.touches = [{clientY: 0}];
+    eTouchStart.touches = [{ clientY: 0 }];
     let eTouchMove = createEvent('touchmove', true, true);
-    eTouchMove.touches = [{clientY: -30}];
+    eTouchMove.touches = [{ clientY: -30 }];
 
     const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
@@ -73,19 +57,19 @@ describe('event', () => {
           <pull-to @top-state-change="onTopStateChange" :top-load-method="onTopLoadMethod"><div></div></pull-to>
         </div>
       `,
-      components: {PullTo},
+      components: { PullToReload },
       methods: {
-        onTopLoadMethod() {},
-        onTopStateChange(e) {
+        onTopLoadMethod () {},
+        onTopStateChange (e) {
           res = e;
         }
       }
     }, true);
 
     let eTouchStart = createEvent('touchstart', true, true);
-    eTouchStart.touches = [{clientY: 0}];
+    eTouchStart.touches = [{ clientY: 0 }];
     let eTouchMove = createEvent('touchmove', true, true);
-    eTouchMove.touches = [{clientY: 60}];
+    eTouchMove.touches = [{ clientY: 60 }];
 
     const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
@@ -105,19 +89,19 @@ describe('event', () => {
           <pull-to @bottom-state-change="onBottomStateChange" :bottom-load-method="onBottomLoadMethod"><div></div></pull-to>
         </div>
       `,
-      components: {PullTo},
+      components: { PullToReload },
       methods: {
-        onBottomLoadMethod() {},
-        onBottomStateChange(e) {
+        onBottomLoadMethod () {},
+        onBottomStateChange (e) {
           res = e;
         }
       }
     }, true);
 
     let eTouchStart = createEvent('touchstart', true, true);
-    eTouchStart.touches = [{clientY: 0}];
+    eTouchStart.touches = [{ clientY: 0 }];
     let eTouchMove = createEvent('touchmove', true, true);
-    eTouchMove.touches = [{clientY: -60}];
+    eTouchMove.touches = [{ clientY: -60 }];
 
     const elem = vm.$el.querySelector('.vpr-scroll-container');
     elem.dispatchEvent(eTouchStart);
@@ -137,9 +121,9 @@ describe('event', () => {
           <pull-to @infinite-scroll="onInfiniteScroll"><div></div></pull-to>
         </div>
       `,
-      components: {PullTo},
+      components: { PullToReload },
       methods: {
-        onInfiniteScroll(e) {
+        onInfiniteScroll (e) {
           res = true;
         }
       }
@@ -163,9 +147,9 @@ describe('event', () => {
           <pull-to @scroll="onScroll"><div></div></pull-to>
         </div>
       `,
-      components: {PullTo},
+      components: { PullToReload },
       methods: {
-        onScroll(e) {
+        onScroll (e) {
           res = e;
         }
       }

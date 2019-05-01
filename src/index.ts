@@ -1,3 +1,3 @@
-import PullTo from './vue-pull-to-reload.vue';
+import PullToReload from './vue-pull-to-reload.vue';
 
-export default PullTo;
+export default PullToReload;
