@@ -1,43 +1,46 @@
-/* eslint-disable */
-import {createTest, createVue} from '../utils';
-import PullTo from '../../../src';
+import PullToReload from '../../../src/index';
+import { mount } from '@vue/test-utils';
 
 describe('dom', () => {
-  let vm;
+  let wrapper;
   it('create', () => {
-    vm = createTest(PullTo, true);
-    const elem = vm.$el;
-    expect(elem.classList.contains('vpr-wrapper')).to.be.ok;
-    expect(elem.querySelector('.vpr-scroll-container')).to.be.ok;
+    wrapper = mount(PullToReload);
+    expect(wrapper.classes('vpr-wrapper')).toBeTruthy();
+    expect(wrapper.find('.vpr-scroll-container').exists()).toBeTruthy();
   });
 
   it('create action block', () => {
-    vm = createTest(PullTo, {
-      topLoadMethod: () => {},
-      bottomLoadMethod: () => {}
-    }, true);
-    const elem = vm.$el;
-    expect(elem.querySelectorAll('.vpr-action-block').length).to.be.equal(2);
+    wrapper = mount(PullToReload, {
+      propsData: {
+        topLoadMethod: () => {},
+        bottomLoadMethod: () => {}
+      }
+    });
+    expect(wrapper.findAll('.vpr-action-block')).toHaveLength(2);
   });
 
   it('set prop BlockHeight', () => {
-    vm = createTest(PullTo, {
-      topLoadMethod: () => {},
-      bottomLoadMethod: () => {},
-      topBlockHeight: 60,
-      bottomBlockHeight: 60
-    }, true);
-    const elems = vm.$el.querySelectorAll('.vpr-action-block');
-    expect(elems[0].style.height).to.be.equal('60px');
-    expect(elems[0].style.marginTop).to.be.equal('-60px');
-    expect(elems[1].style.height).to.be.equal('60px');
-    expect(elems[1].style.marginBottom).to.be.equal('-60px');
+    wrapper = mount(PullToReload, {
+      propsData: {
+        topLoadMethod: () => {},
+        bottomLoadMethod: () => {},
+        topBlockHeight: 60,
+        bottomBlockHeight: 60
+      }
+    });
+    const elems = wrapper.findAll('.vpr-action-block');
+    expect(elems.at(0).element.style.height).toEqual('60px');
+    expect(elems.at(0).element.style.marginTop).toEqual('-60px');
+    expect(elems.at(1).element.style.height).toEqual('60px');
+    expect(elems.at(1).element.style.marginBottom).toEqual('-60px');
   });
 
   it('set wrapperHeight', () => {
-    vm = createTest(PullTo, {
-      wrapperHeight: '80%'
-    }, true);
-    expect(vm.$el.style.height).to.be.equal('80%');
+    wrapper = mount(PullToReload, {
+      propsData: {
+        wrapperHeight: '80%'
+      }
+    });
+    expect(wrapper.element.style.height).toEqual('80%');
   });
 });
