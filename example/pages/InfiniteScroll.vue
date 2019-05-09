@@ -2,7 +2,7 @@
   <pull-to
     @infinite-scroll="loadmore">
     <ul class="list">
-      <li v-for="item in dataList">
+      <li v-for="(item, i) in dataList" :key="i">
         {{ item }}
       </li>
     </ul>
